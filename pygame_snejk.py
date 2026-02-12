@@ -126,7 +126,7 @@ class Polje(Kaca):
 			self.znotraj = False
 			print("Šu si vn")
 		for x in self.pozicije:
-			if self.pozicije.count(x) > 1:
+			if self.pozicije.count(x) > 1:  # pazi 10
 				self.znotraj = False
 				print("Pojedu si se")
 				break
@@ -172,10 +172,24 @@ class Polje(Kaca):
 			screen.fill(bg)
 
 			pygame.draw.circle(screen, (0, 255, 0), (self.hrana[0], self.hrana[1]), 10)
-			dx = self.pozicije[0][0] - self.hrana[0]
-			dy = self.pozicije[0][1] - self.hrana[1]
-			distance_squared = dx*dx + dy*dy
-			if distance_squared <= 15*15:
+			# rectangle size
+			circle_center = self.hrana
+			rect_width = 20
+			rect_height = 20
+			rect_left = self.pozicije[0][0]
+			rect_top = self.pozicije[0][1]
+			rect_right = rect_left + rect_width
+			rect_bottom = rect_top + rect_height
+
+			# closest point on rect to circle
+			closest_x = max(rect_left, min(circle_center[0], rect_right))
+			closest_y = max(rect_top, min(circle_center[1], rect_bottom))
+
+			# distance squared
+			dx = circle_center[0] - closest_x
+			dy = circle_center[1] - closest_y
+
+			if dx*dx + dy*dy <= 10*10:
 				self.podaljsevanje()
 				self.nova_hrana()
 			else:
