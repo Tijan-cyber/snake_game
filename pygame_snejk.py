@@ -173,23 +173,10 @@ class Polje(Kaca):
 
 			pygame.draw.circle(screen, (0, 255, 0), (self.hrana[0], self.hrana[1]), 10)
 			# rectangle size
-			circle_center = self.hrana
-			rect_width = 20
-			rect_height = 20
-			rect_left = self.pozicije[0][0]
-			rect_top = self.pozicije[0][1]
-			rect_right = rect_left + rect_width
-			rect_bottom = rect_top + rect_height
+			dx = self.pozicije[0][0] - self.hrana[0]
+			dy = self.pozicije[0][1] - self.hrana[1]
 
-			# closest point on rect to circle
-			closest_x = max(rect_left, min(circle_center[0], rect_right))
-			closest_y = max(rect_top, min(circle_center[1], rect_bottom))
-
-			# distance squared
-			dx = circle_center[0] - closest_x
-			dy = circle_center[1] - closest_y
-
-			if dx*dx + dy*dy <= 10*10:
+			if dx*dx + dy*dy <= (10 + 10)**2:
 				self.podaljsevanje()
 				self.nova_hrana()
 			else:
@@ -198,10 +185,19 @@ class Polje(Kaca):
 				x = i[0]
 				y = i[1]
 				try: 
-					#if self.pozicije.index(i) == 0:
-						#pygame.draw.circle(screen, (0,225,255), (x,y+10), 10)  #SMER POMEMBNA
-					#else:
-					pygame.draw.rect(screen, (0,225,255), (x,y,20,20))
+					if self.pozicije.index(i) == 0:
+						if self.smer == "levo":
+							pygame.draw.circle(screen, (0,225,255), (x,y+10), 10)  #SMER POMEMBNA
+						elif self.smer == "desno":
+							pygame.draw.circle(screen, (0,225,255), (x+20,y+10), 10)  #SMER POMEMBNA
+						elif self.smer == "gor":
+							pygame.draw.circle(screen, (0,225,255), (x+10,y), 10)  #SMER POMEMBNA
+
+						elif self.smer == "dol":
+							pygame.draw.circle(screen, (0,225,255), (x+10,y+20), 10)  #SMER POMEMBNA
+
+					else:
+						pygame.draw.rect(screen, (0,225,255), (x,y,20,20))
 				except Exception as e:
 					self.znotraj = False
 
