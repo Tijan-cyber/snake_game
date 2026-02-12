@@ -173,10 +173,10 @@ class Polje(Kaca):
 
 			pygame.draw.circle(screen, (0, 255, 0), (self.hrana[0], self.hrana[1]), 10)
 			# rectangle size
-			dx = self.pozicije[0][0] - self.hrana[0]
-			dy = self.pozicije[0][1] - self.hrana[1]
+			dx = abs(self.pozicije[0][0] - self.hrana[0])
+			dy = abs(self.pozicije[0][1] - self.hrana[1])
 
-			if dx*dx + dy*dy <= (10 + 10)**2:
+			if (dx*dx + dy*dy) <= 100: #NEDELUJOCI CE PRIDE Z LEVE
 				self.podaljsevanje()
 				self.nova_hrana()
 			else:
