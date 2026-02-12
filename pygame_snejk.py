@@ -49,22 +49,24 @@ class Kaca:
 	def premik(self, podaljsevanje=False):
 		potem = copy.deepcopy(self.pozicije)
 
-		if self.smer == "gor":
-				potem[0][0] -= 1
-
-		elif self.smer == "dol":
-				potem[0][0] += 1
-
-
-		elif self.smer == "levo":
-				potem[0][1] -= 1
+		if self.smer == "levo":
+				potem[0][0] -= 2
 
 		elif self.smer == "desno":
-				potem[0][1] += 1
+				potem[0][0] += 2
+
+
+		elif self.smer == "gor":
+				potem[0][1] -= 2
+
+		elif self.smer == "dol":
+				potem[0][1] += 2
 
 		for i in range(1, len(potem)):
 			potem[i] = self.pozicije[i-1]
 		if podaljsevanje:
+			print("podaljsevanje")
+			print(self.pozicije[-1])
 			potem.append(self.pozicije[-1]) 
 
 
@@ -81,7 +83,7 @@ class Polje(Kaca):
 	def __init__(self):
 		super().__init__()
 		self.rezultat = 0
-		self.hrana = [350,450]
+		self.hrana = [350, 450]
 		self.znotraj = True
 		self.igra = True
 
@@ -126,21 +128,24 @@ class Polje(Kaca):
 
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_w:
-						Kaca.sprememba_smeri("w")
+						self.sprememba_smeri("w")
 
 					if event.key == pygame.K_s:
-						Kaca.sprememba_smeri("s")
+						self.sprememba_smeri("s")
 
 					if event.key == pygame.K_a:
-						Kaca.sprememba_smeri("a")
+						self.sprememba_smeri("a")
 
 					if event.key == pygame.K_d:
-						Kaca.sprememba_smeri("d")
+						self.sprememba_smeri("d")
 
 			screen.fill(bg)
 
 			pygame.draw.circle(screen, (0, 255, 0), (self.hrana[0], self.hrana[1]), 10)
-			if self.pozicije[0] == self.hrana:
+			dx = self.pozicije[0][0] - self.hrana[0]
+			dy = self.pozicije[0][1] - self.hrana[1]
+			distance_squared = dx*dx + dy*dy
+			if distance_squared <= 15*15:
 				self.premik(podaljsevanje=True)
 				self.nova_hrana()
 			else:
@@ -149,10 +154,10 @@ class Polje(Kaca):
 				x = i[0]
 				y = i[1]
 				try: 
-					if self.pozicije.index(i) == 0:
-						pygame.draw.circle(screen, (0,225,255), (x,y+10), 10)
-					else:
-						pygame.draw.rect(screen, (0,225,255), (x,y,20,20))
+					#if self.pozicije.index(i) == 0:
+						#pygame.draw.circle(screen, (0,225,255), (x,y+10), 10)  #SMER POMEMBNA
+					#else:
+					pygame.draw.rect(screen, (0,225,255), (x,y,20,20))
 				except Exception as e:
 					self.znotraj = False
 
@@ -181,6 +186,7 @@ bg = (0,0,0)
 igra = True
 
 clock = pygame.time.Clock()
+#clock.tick(0.05)
 
 
 igralna_plosca = Polje()
