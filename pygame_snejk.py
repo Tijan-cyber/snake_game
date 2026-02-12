@@ -27,7 +27,7 @@ class Kaca:
 	def __init__(self):
 		self.smer = "gor"
 		self.zivljenje = True
-		self.pozicije = [[1000, 600], [1010, 600]]
+		self.pozicije = [[1000, 600]]
 
 
 
@@ -64,19 +64,49 @@ class Kaca:
 
 		for i in range(1, len(potem)):
 			potem[i] = self.pozicije[i-1]
-		if podaljsevanje:
-			print("podaljsevanje")
-			print(self.pozicije[-1])
-			potem.append(self.pozicije[-1]) 
 
-
-
-		
 
 		self.pozicije = potem
 
 
 
+	def podaljsevanje(self):
+		for x in range(5):
+			potem = copy.deepcopy(self.pozicije)
+			if self.smer == "levo":
+					potem[0][0] -= 2
+
+			elif self.smer == "desno":
+					potem[0][0] += 2
+
+
+			elif self.smer == "gor":
+					potem[0][1] -= 2
+
+			elif self.smer == "dol":
+					potem[0][1] += 2
+
+			for i in range(1, len(potem)):
+				potem[i] = self.pozicije[i-1]
+				
+			potem.append(self.pozicije[-1])
+
+
+			if self.smer == "levo":
+				potem.append([self.pozicije[-1][0]+2, self.pozicije[-1][1]])
+
+			elif self.smer == "desno":
+				potem.append([self.pozicije[-1][0]-2, self.pozicije[-1][1]])
+
+
+			elif self.smer == "gor":
+				potem.append([self.pozicije[-1][0], self.pozicije[-1][1]+2])
+
+
+			elif self.smer == "dol":
+				potem.append([self.pozicije[-1][0], self.pozicije[-1][1]-2])
+
+			self.pozicije = potem
 
 
 class Polje(Kaca):
@@ -146,7 +176,7 @@ class Polje(Kaca):
 			dy = self.pozicije[0][1] - self.hrana[1]
 			distance_squared = dx*dx + dy*dy
 			if distance_squared <= 15*15:
-				self.premik(podaljsevanje=True)
+				self.podaljsevanje()
 				self.nova_hrana()
 			else:
 				self.premik()
