@@ -27,10 +27,7 @@ class Kaca:
 	def __init__(self):
 		self.smer = "gor"
 		self.zivljenje = True
-		self.pozicije = [[1000, 600]]
-
-
-
+		self.pozicije=[[914, 804], [912, 804], [910, 804], [908, 804], [906, 804], [904, 804], [902, 804], [900, 804], [898, 804], [896, 804], [894, 804]]
 	def sprememba_smeri(self, pritisk):
 		smeri = ["gor", "levo", "dol", "desno"]
 		if pritisk == "a":
@@ -42,7 +39,7 @@ class Kaca:
 		elif pritisk == "s":
 			self.smer = "dol"
 
-		print(self.smer)
+
 
 		
 
@@ -138,8 +135,8 @@ class Polje(Kaca):
 
 		possible = [
 			[x, y]
-			for x in range(10, 2000)
-			for y in range(10, 1200)
+			for x in range(100, 1900)
+			for y in range(100, 1000)
 			if [x, y] not in snake
 		]
 
@@ -169,14 +166,37 @@ class Polje(Kaca):
 					if event.key == pygame.K_d:
 						self.sprememba_smeri("d")
 
+
+					if event.key == pygame.K_UP:
+						self.sprememba_smeri("w")
+
+					if event.key == pygame.K_DOWN:
+						self.sprememba_smeri("s")
+
+					if event.key == pygame.K_LEFT:
+						self.sprememba_smeri("a")
+
+					if event.key == pygame.K_RIGHT:
+						self.sprememba_smeri("d")
+
 			screen.fill(bg)
 
-			pygame.draw.circle(screen, (0, 255, 0), (self.hrana[0], self.hrana[1]), 10)
+			pygame.draw.circle(screen, (0, 255, 0), (self.hrana[0], self.hrana[1]), 5)
 			# rectangle size
-			dx = abs(self.pozicije[0][0] - self.hrana[0])
-			dy = abs(self.pozicije[0][1] - self.hrana[1])
 
-			if (dx*dx + dy*dy) <= 100: #NEDELUJOCI CE PRIDE Z LEVE
+			x = self.pozicije[0][0]
+			y = self.pozicije[0][1]
+
+			if self.smer == "levo":
+			    head_center = (x, y+10)
+			elif self.smer == "desno":
+			    head_center = (x+20, y+10)
+			elif self.smer == "gor":
+			    head_center = (x+10, y)
+			elif self.smer == "dol":
+			    head_center = (x+10, y+20)
+
+			if abs(head_center[0]-self.hrana[0]) <= 12 and abs(head_center[1]-self.hrana[1]) <= 12 :
 				self.podaljsevanje()
 				self.nova_hrana()
 			else:
@@ -201,12 +221,14 @@ class Polje(Kaca):
 				except Exception as e:
 					self.znotraj = False
 
+			dolzina = str(len(self.pozicije)//10)
+
+			screen.blit(font.render(f"score: {dolzina}",True,(255,0,0)),(1810,40))
+
 			self.znotraj_check()
 
 			
 			pygame.display.flip()
-
-
 
 
 
@@ -224,9 +246,11 @@ screen = pygame.display.set_mode((2000, 1200))
 pygame.display.set_caption("Pygame")
 bg = (0,0,0)
 igra = True
+font=pygame.font.Font(None,50)
+
 
 clock = pygame.time.Clock()
-#clock.tick(0.05)
+
 
 
 igralna_plosca = Polje()
