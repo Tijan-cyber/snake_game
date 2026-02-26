@@ -113,9 +113,13 @@ class Polje(Kaca):
 		self.hrana = [350, 450]
 		self.znotraj = True
 		self.igra = True
+		self.barva = (0,225,255)
 
 
 
+
+	def sprememba_barve(self):
+		self.barva = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
 
 
 	def znotraj_check(self):
@@ -179,6 +183,11 @@ class Polje(Kaca):
 					if event.key == pygame.K_RIGHT:
 						self.sprememba_smeri("d")
 
+
+					if event.key == pygame.K_SPACE:
+						self.sprememba_barve()
+
+
 			screen.fill(bg)
 
 			pygame.draw.circle(screen, (0, 255, 0), (self.hrana[0], self.hrana[1]), 5)
@@ -207,17 +216,17 @@ class Polje(Kaca):
 				try: 
 					if self.pozicije.index(i) == 0:
 						if self.smer == "levo":
-							pygame.draw.circle(screen, (0,225,255), (x,y+10), 10)  #SMER POMEMBNA
+							pygame.draw.circle(screen, self.barva, (x,y+10), 10)  #SMER POMEMBNA
 						elif self.smer == "desno":
-							pygame.draw.circle(screen, (0,225,255), (x+20,y+10), 10)  #SMER POMEMBNA
+							pygame.draw.circle(screen, self.barva, (x+20,y+10), 10)  #SMER POMEMBNA
 						elif self.smer == "gor":
-							pygame.draw.circle(screen, (0,225,255), (x+10,y), 10)  #SMER POMEMBNA
+							pygame.draw.circle(screen, self.barva, (x+10,y), 10)  #SMER POMEMBNA
 
 						elif self.smer == "dol":
-							pygame.draw.circle(screen, (0,225,255), (x+10,y+20), 10)  #SMER POMEMBNA
+							pygame.draw.circle(screen, self.barva, (x+10,y+20), 10)  #SMER POMEMBNA
 
 					else:
-						pygame.draw.rect(screen, (0,225,255), (x,y,20,20))
+						pygame.draw.rect(screen, self.barva, (x,y,20,20))
 				except Exception as e:
 					self.znotraj = False
 
