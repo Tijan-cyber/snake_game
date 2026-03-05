@@ -194,7 +194,7 @@ class Polje(Kaca):
 
 
 
-	def znotraj_check(self, head_center1, head_center2):
+	def znotraj_check(self):
 		if self.pozicije1[0][0] < 10 or self.pozicije1[0][1] < 10 or self.pozicije1[0][0] > 1990 or self.pozicije1[0][1] > 1190:  #PAZI SIRINE RECTOV!!!
 			self.znotraj1 = False
 		for x in self.pozicije1:
@@ -239,7 +239,7 @@ class Polje(Kaca):
 
 
 	def igranje(self):
-		while (self.znotraj1 or self.znotraj2) and self.igra:
+		while (self.znotraj1 and self.znotraj2) and self.igra:
 			clock.tick(120)
 
 			for event in pygame.event.get():
@@ -370,7 +370,7 @@ class Polje(Kaca):
 			screen.blit(font.render(f"score2: {dolzina2}",True,(255,0,0)),(1810,80))
 
 
-			self.znotraj_check(head_center1, head_center2)
+			self.znotraj_check()
 
 
 			
@@ -404,9 +404,3 @@ kaca = Kaca()
 
 
 igralna_plosca.igranje()
-
-
-
-
-
-
