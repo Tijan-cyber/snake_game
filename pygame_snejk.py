@@ -232,6 +232,12 @@ class Polje(Kaca):
 
 
 
+	def restart(self):
+		self.pozicije1=[[914, 804], [912, 804], [910, 804], [908, 804], [906, 804], [904, 804], [902, 804], [900, 804], [898, 804], [896, 804], [894, 804]]
+		self.pozicije2=[[614, 504], [612, 504], [610, 504], [608, 504], [606, 504], [604, 504], [602, 504], [600, 504], [598, 504], [596, 504], [594, 504]]
+		self.hrana = [350, 450]
+
+
 	def igranje(self):
 		while (self.znotraj1 or self.znotraj2) and self.igra:
 			clock.tick(120)
@@ -266,6 +272,10 @@ class Polje(Kaca):
 
 					if event.key == pygame.K_RIGHT:
 						self.sprememba_smeri_puscice("d")
+
+
+					if event.key == pygame.K_r:
+						self.restart()
 
 			screen.fill(bg)
 
@@ -338,17 +348,17 @@ class Polje(Kaca):
 				try: 
 					if self.pozicije2.index(i) == 0:
 						if self.smer2 == "levo":
-							pygame.draw.circle(screen, (0,225,255), (x,y+10), 10)  #SMER POMEMBNA
+							pygame.draw.circle(screen, (0,0,255), (x,y+10), 10)  #SMER POMEMBNA
 						elif self.smer2 == "desno":
-							pygame.draw.circle(screen, (0,225,255), (x+20,y+10), 10)  #SMER POMEMBNA
+							pygame.draw.circle(screen, (0,0,255), (x+20,y+10), 10)  #SMER POMEMBNA
 						elif self.smer2 == "gor":
-							pygame.draw.circle(screen, (0,225,255), (x+10,y), 10)  #SMER POMEMBNA
+							pygame.draw.circle(screen, (0,0,255), (x+10,y), 10)  #SMER POMEMBNA
 
 						elif self.smer2 == "dol":
-							pygame.draw.circle(screen, (0,225,255), (x+10,y+20), 10)  #SMER POMEMBNA
+							pygame.draw.circle(screen, (0,0,255), (x+10,y+20), 10)  #SMER POMEMBNA
 
 					else:
-						pygame.draw.rect(screen, (0,225,255), (x,y,20,20))
+						pygame.draw.rect(screen, (0,0,255), (x,y,20,20))
 				except Exception as e:
 					self.znotraj2 = False
 
