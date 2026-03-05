@@ -27,8 +27,6 @@ class Kaca:
 	def __init__(self):
 		self.smer1 = "gor"
 		self.smer2 = "gor"
-		self.zivljenje1 = True
-		self.zivljenje2 = True
 		self.pozicije1=[[914, 804], [912, 804], [910, 804], [908, 804], [906, 804], [904, 804], [902, 804], [900, 804], [898, 804], [896, 804], [894, 804]]
 		self.pozicije2=[[614, 504], [612, 504], [610, 504], [608, 504], [606, 504], [604, 504], [602, 504], [600, 504], [598, 504], [596, 504], [594, 504]]
 		
@@ -188,7 +186,7 @@ class Polje(Kaca):
 		self.hrana = [350, 450]
 		self.znotraj1 = True
 		self.znotraj2 = True
-		self.igra = True
+		self.trk = False
 		self.barva1 = (0,225,255)
 		self.barva2 = (0,0,255)
 
@@ -206,24 +204,27 @@ class Polje(Kaca):
 	def znotraj_check(self):
 		if self.pozicije1[0][0] < 10 or self.pozicije1[0][1] < 10 or self.pozicije1[0][0] > 1990 or self.pozicije1[0][1] > 1190:  #PAZI SIRINE RECTOV!!!
 			self.znotraj1 = False
+			self.sporocilo = "prve kače"
 		for x in self.pozicije1:
 			if self.pozicije1.count(x) > 1:  # pazi 10
 				self.znotraj1 = False
+				self.sporocilo = "prve kače"
 			
 
 		if self.pozicije2[0][0] < 10 or self.pozicije2[0][1] < 10 or self.pozicije2[0][0] > 1990 or self.pozicije2[0][1] > 1190:  #PAZI SIRINE RECTOV!!!
 			self.znotraj2 = False
+			self.sporocilo = "druge kače"				
+
 		for x in self.pozicije2:
 			if self.pozicije2.count(x) > 1:  # pazi 10
 				self.znotraj2 = False
-				
+				self.sporocilo = "druge kače"				
 
 		for i in self.pozicije1:
 			for y in self.pozicije2:
 				if abs(i[0]-y[0]) <= 10 and abs(i[1]-y[1]) <= 10:
-					print("trk")
-					self.igra = False
-
+					self.trk = True
+					self.sporocilo = "trka"
 
 
 	def nova_hrana(self):
@@ -246,150 +247,173 @@ class Polje(Kaca):
 
 
 	def igranje(self):
-		while (self.znotraj1 and self.znotraj2) and self.igra:
-			clock.tick(120)
+		while True:
+			while (self.znotraj1 and self.znotraj2) and not self.trk:
+				clock.tick(120)
 
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					self.igra = False
-
-
-				if event.type == pygame.KEYDOWN:
-					if event.key == pygame.K_w:
-						self.sprememba_smeri_wasd("w")
-
-					if event.key == pygame.K_s:
-						self.sprememba_smeri_wasd("s")
-
-					if event.key == pygame.K_a:
-						self.sprememba_smeri_wasd("a")
-
-					if event.key == pygame.K_d:
-						self.sprememba_smeri_wasd("d")
+				for event in pygame.event.get():
+					if event.type == pygame.QUIT:
+						quit()
 
 
-					if event.key == pygame.K_UP:
-						self.sprememba_smeri_puscice("w")
+					if event.type == pygame.KEYDOWN:
+						if event.key == pygame.K_w:
+							self.sprememba_smeri_wasd("w")
 
-					if event.key == pygame.K_DOWN:
-						self.sprememba_smeri_puscice("s")
-
-					if event.key == pygame.K_LEFT:
-						self.sprememba_smeri_puscice("a")
-
-					if event.key == pygame.K_RIGHT:
-						self.sprememba_smeri_puscice("d")
+						if event.key == pygame.K_s:
+							self.sprememba_smeri_wasd("s")
 
 
-					if event.key == pygame.K_r:
+						if event.key == pygame.K_a:
+							self.sprememba_smeri_wasd("a")
+
+						if event.key == pygame.K_d:
+							self.sprememba_smeri_wasd("d")
+
+
+						if event.key == pygame.K_UP:
+							self.sprememba_smeri_puscice("w")
+
+						if event.key == pygame.K_DOWN:
+							self.sprememba_smeri_puscice("s")
+
+						if event.key == pygame.K_LEFT:
+							self.sprememba_smeri_puscice("a")
+
+						if event.key == pygame.K_RIGHT:
+							self.sprememba_smeri_puscice("d")
+
+
+						if event.key == pygame.K_r:
+							self.restart()
+
+
+						if event.key == pygame.K_SPACE:
+							self.sprememba_barve()
+
+
+				screen.fill(bg)
+
+				pygame.draw.circle(screen, (0, 255, 0), (self.hrana[0], self.hrana[1]), 5)
+
+				xp = self.pozicije1[0][0]
+				yp = self.pozicije1[0][1]
+				xd = self.pozicije2[0][0]
+				yd = self.pozicije2[0][1]
+
+				if self.smer1 == "levo":
+				    head_center1 = (xp, yp+10)
+				elif self.smer1 == "desno":
+				    head_center1 = (xp+20, yp+10)
+				elif self.smer1 == "gor":
+				    head_center1 = (xp+10, yp)
+				elif self.smer1 == "dol":
+				    head_center1 = (xp+10, yp+20)
+
+				if self.smer2 == "levo":
+				    head_center2 = (xd, yd+10)
+				elif self.smer2 == "desno":
+				    head_center2 = (xd+20, yd+10)
+				elif self.smer2 == "gor":
+				    head_center2 = (xd+10, yd)
+				elif self.smer2 == "dol":
+				    head_center2 = (xd+10, yd+20)
+
+
+
+				if abs(head_center1[0]-self.hrana[0]) <= 12 and abs(head_center1[1]-self.hrana[1]) <= 12 :
+					self.podaljsevanje(1)
+					self.nova_hrana()
+
+
+
+				if abs(head_center2[0]-self.hrana[0]) <= 12 and abs(head_center2[1]-self.hrana[1]) <= 12 :
+					self.podaljsevanje(2)
+					self.nova_hrana()
+
+
+
+				self.premik(1)
+				self.premik(2) #!!!!!!!!!!!!!!!!!!!
+
+
+				for i in self.pozicije1:
+					x = i[0]
+					y = i[1]
+					try: 
+
+						if self.pozicije1.index(i) == 0:
+							if self.smer1 == "levo":
+								pygame.draw.circle(screen, self.barva1, (x,y+10), 10)  #SMER POMEMBNA
+							elif self.smer1 == "desno":
+								pygame.draw.circle(screen, self.barva1, (x+20,y+10), 10)  #SMER POMEMBNA
+							elif self.smer1 == "gor":
+								pygame.draw.circle(screen, self.barva1, (x+10,y), 10)  #SMER POMEMBNA
+
+							elif self.smer1 == "dol":
+								pygame.draw.circle(screen, self.barva1, (x+10,y+20), 10)  #SMER POMEMBNA
+
+						else:
+							pygame.draw.rect(screen, self.barva1, (x,y,20,20))
+					except Exception as e:
+						self.znotraj1 = False
+
+				for i in self.pozicije2:
+					x = i[0]
+					y = i[1]
+					try: 
+						if self.pozicije2.index(i) == 0:
+							if self.smer2 == "levo":
+								pygame.draw.circle(screen, self.barva2, (x,y+10), 10)  #SMER POMEMBNA
+							elif self.smer2 == "desno":
+								pygame.draw.circle(screen, self.barva2, (x+20,y+10), 10)  #SMER POMEMBNA
+							elif self.smer2 == "gor":
+								pygame.draw.circle(screen, self.barva2, (x+10,y), 10)  #SMER POMEMBNA
+
+							elif self.smer2 == "dol":
+								pygame.draw.circle(screen, self.barva2, (x+10,y+20), 10)  #SMER POMEMBNA
+
+						else:
+							pygame.draw.rect(screen, self.barva2, (x,y,20,20))
+					except Exception as e:
+						self.znotraj2 = False
+
+
+				dolzina1 = str(len(self.pozicije1)//10)
+				dolzina2 = str(len(self.pozicije2)//10)
+				font=pygame.font.Font(None,50)
+				screen.blit(font.render(f"score1: {dolzina1}",True,(255,0,0)),(1810,40))
+				screen.blit(font.render(f"score2: {dolzina2}",True,(255,0,0)),(1810,80))
+
+
+				self.znotraj_check()
+
+				pygame.display.flip()
+
+
+
+
+
+		    # GAME OVER SCREEN
+			font = pygame.font.Font(None, 100)
+			waiting = True
+			while waiting:
+				dolzina1 = str(len(self.pozicije1)//10)
+				dolzina2 = str(len(self.pozicije2)//10)
+				screen.fill(bg)
+				screen.blit(font.render(f"Konec igre zaradi {self.sporocilo}. Pritisni r za restart", True, (255,0,0)),(200,500))
+				screen.blit(font.render(f"score1: {dolzina1}", True, (0,0,255)), (800, 700))
+				screen.blit(font.render(f"score2: {dolzina2}", True, (0,0,255)), (800, 780))
+
+				pygame.display.flip()
+
+				for event in pygame.event.get():
+					if event.type == pygame.QUIT:
+						quit()
+
+					if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+						waiting = False
 						self.restart()
-
-
-					if event.key == pygame.K_SPACE:
-						self.sprememba_barve()
-
-
-			screen.fill(bg)
-
-			pygame.draw.circle(screen, (0, 255, 0), (self.hrana[0], self.hrana[1]), 5)
-
-			xp = self.pozicije1[0][0]
-			yp = self.pozicije1[0][1]
-			xd = self.pozicije2[0][0]
-			yd = self.pozicije2[0][1]
-
-			if self.smer1 == "levo":
-			    head_center1 = (xp, yp+10)
-			elif self.smer1 == "desno":
-			    head_center1 = (xp+20, yp+10)
-			elif self.smer1 == "gor":
-			    head_center1 = (xp+10, yp)
-			elif self.smer1 == "dol":
-			    head_center1 = (xp+10, yp+20)
-
-			if self.smer2 == "levo":
-			    head_center2 = (xd, yd+10)
-			elif self.smer2 == "desno":
-			    head_center2 = (xd+20, yd+10)
-			elif self.smer2 == "gor":
-			    head_center2 = (xd+10, yd)
-			elif self.smer2 == "dol":
-			    head_center2 = (xd+10, yd+20)
-
-
-
-			if abs(head_center1[0]-self.hrana[0]) <= 12 and abs(head_center1[1]-self.hrana[1]) <= 12 :
-				self.podaljsevanje(1)
-				self.nova_hrana()
-
-
-
-			if abs(head_center2[0]-self.hrana[0]) <= 12 and abs(head_center2[1]-self.hrana[1]) <= 12 :
-				self.podaljsevanje(2)
-				self.nova_hrana()
-
-
-
-			self.premik(1)
-			self.premik(2) #!!!!!!!!!!!!!!!!!!!
-
-
-			for i in self.pozicije1:
-				x = i[0]
-				y = i[1]
-				try: 
-
-					if self.pozicije1.index(i) == 0:
-						if self.smer1 == "levo":
-							pygame.draw.circle(screen, self.barva1, (x,y+10), 10)  #SMER POMEMBNA
-						elif self.smer1 == "desno":
-							pygame.draw.circle(screen, self.barva1, (x+20,y+10), 10)  #SMER POMEMBNA
-						elif self.smer1 == "gor":
-							pygame.draw.circle(screen, self.barva1, (x+10,y), 10)  #SMER POMEMBNA
-
-						elif self.smer1 == "dol":
-							pygame.draw.circle(screen, self.barva1, (x+10,y+20), 10)  #SMER POMEMBNA
-
-					else:
-						pygame.draw.rect(screen, self.barva1, (x,y,20,20))
-				except Exception as e:
-					self.znotraj1 = False
-
-			for i in self.pozicije2:
-				x = i[0]
-				y = i[1]
-				try: 
-					if self.pozicije2.index(i) == 0:
-						if self.smer2 == "levo":
-							pygame.draw.circle(screen, self.barva2, (x,y+10), 10)  #SMER POMEMBNA
-						elif self.smer2 == "desno":
-							pygame.draw.circle(screen, self.barva2, (x+20,y+10), 10)  #SMER POMEMBNA
-						elif self.smer2 == "gor":
-							pygame.draw.circle(screen, self.barva2, (x+10,y), 10)  #SMER POMEMBNA
-
-						elif self.smer2 == "dol":
-							pygame.draw.circle(screen, self.barva2, (x+10,y+20), 10)  #SMER POMEMBNA
-
-					else:
-						pygame.draw.rect(screen, self.barva2, (x,y,20,20))
-				except Exception as e:
-					self.znotraj2 = False
-
-
-			dolzina1 = str(len(self.pozicije1)//10)
-			dolzina2 = str(len(self.pozicije2)//10)
-
-			screen.blit(font.render(f"score1: {dolzina1}",True,(255,0,0)),(1810,40))
-			screen.blit(font.render(f"score2: {dolzina2}",True,(255,0,0)),(1810,80))
-
-
-			self.znotraj_check()
-
-
-			
-			pygame.display.flip()
-
-
 
 
 
@@ -412,8 +436,7 @@ clock = pygame.time.Clock()
 
 
 
-igralna_plosca = Polje()
-kaca = Kaca()
+Polje = Polje()
+Kaca = Kaca()
 
-
-igralna_plosca.igranje()
+Polje.igranje()
