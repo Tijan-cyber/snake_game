@@ -32,26 +32,26 @@ class Kaca:
 		
 	def sprememba_smeri_wasd(self, pritisk):
 		smeri = ["gor", "levo", "dol", "desno"]
-		if pritisk == "a":
+		if pritisk == "a" and self.smer1 != "desno":
 			self.smer1 = "levo"
-		elif pritisk == "d":
+		elif pritisk == "d" and self.smer1 != "levo":
 			self.smer1 = "desno"
-		elif pritisk == "w":
+		elif pritisk == "w" and self.smer1 != "dol":
 			self.smer1 = "gor"
-		elif pritisk == "s":
+		elif pritisk == "s" and self.smer1 != "gor":
 			self.smer1 = "dol"
 
 
 
 	def sprememba_smeri_puscice(self, pritisk):
 		smeri = ["gor", "levo", "dol", "desno"]
-		if pritisk == "a":
+		if pritisk == "a" and self.smer2 != "desno":
 			self.smer2 = "levo"
-		elif pritisk == "d":
+		elif pritisk == "d" and self.smer2 != "levo":
 			self.smer2 = "desno"
-		elif pritisk == "w":
+		elif pritisk == "w" and self.smer2 != "dol":
 			self.smer2 = "gor"
-		elif pritisk == "s":
+		elif pritisk == "s" and self.smer2 != "gor":
 			self.smer2 = "dol"
 
 
@@ -228,6 +228,11 @@ class Polje(Kaca):
 
 
 	def nova_hrana(self):
+		self.hrana = [random.randint(100,1900), random.randint(100, 1000)]
+		while self.hrana in self.pozicije1 or self.hrana in self.pozicije2:
+			self.hrana = [random.randint(100,1900), random.randint(100, 1000)]
+
+		"""
 		snake1 = self.pozicije1
 		snake2 = self.pozicije2
 
@@ -239,6 +244,7 @@ class Polje(Kaca):
 		]
 
 		self.hrana = random.choice(possible)
+		"""
 
 
 
